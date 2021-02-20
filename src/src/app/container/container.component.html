@@ -1,0 +1,21 @@
+<mat-toolbar color="primary">
+    <button mat-icon-button class="example-icon" aria-label="Example icon-button with menu icon">
+        <mat-icon>menu</mat-icon>
+    </button>
+    <span>Todos App</span>
+    <button mat-icon-button aria-label="Example icon button with a add icon"  (click)="openDialog()">
+        <mat-icon>add</mat-icon>
+    </button>
+    <button mat-icon-button aria-label="Example icon button with a cloud_upload icon"  (click)="openFileUpload()">
+        <mat-icon>cloud_upload</mat-icon>
+    </button>
+    <input #todoupload type="file" id="todoupload" accept=".csv" style="display:none" (change)="onFileSelected($event)">
+    <span class="example-spacer"></span>
+    <button mat-icon-button aria-label="Example icon button with a perm_identity icon">
+        <mat-icon>perm_identity</mat-icon>
+    </button>
+    <button mat-icon-button aria-label="Example icon button with a exit_to_app icon">
+        <mat-icon>exit_to_app</mat-icon>
+    </button>
+</mat-toolbar>
+<todo-item-summary [items]="items"></todo-item-summary>

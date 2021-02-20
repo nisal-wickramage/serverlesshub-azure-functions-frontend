@@ -1,0 +1,17 @@
+<h1 mat-dialog-title>Create new todo item</h1>
+<div mat-dialog-content>
+    <form class="example-form">
+        <mat-form-field class="example-full-width">
+            <mat-label>Title</mat-label>
+            <input matInput placeholder="Ex. Buy Grocery" [(ngModel)]="data.title" name="title">
+        </mat-form-field>
+        <mat-form-field class="example-full-width">
+            <mat-label>Description</mat-label>
+            <textarea matInput placeholder="Ex. Buy Milk and Bread." [(ngModel)]="data.description" name="data.description"></textarea>
+        </mat-form-field>
+    </form>
+</div>
+<div mat-dialog-actions>
+    <button mat-button (click)="cancel()">No Thanks</button>
+    <button mat-button [mat-dialog-close]="data" cdkFocusInitial>Ok</button>
+</div>
