@@ -1,6 +1,7 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { NewItemComponent } from '../new-item/new-item.component';
+import { AuthService } from '../services/auth.service';
 import { TodoItem } from '../services/todo-item';
 import { TodoItemService } from '../services/todo-item.service';
 
@@ -16,12 +17,22 @@ export class ContainerComponent implements OnInit {
 
   items: TodoItem[];
 
-  constructor(public dialog: MatDialog, private todoService: TodoItemService) {
+  constructor(public dialog: MatDialog, 
+    private todoService: TodoItemService,
+    private authService: AuthService) {
     this.items = [];
    }
 
   ngOnInit(): void {
     this.todoService.get().then(items => {this.items = items;});
+  }
+
+  async signIn(): Promise<void> {
+    await this.authService.signIn();
+  }
+
+  async callApi(): Promise<void> {
+    await this.authService.callApi();
   }
 
   openFileUpload(): void {
