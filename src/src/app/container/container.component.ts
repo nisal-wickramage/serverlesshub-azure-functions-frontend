@@ -47,7 +47,7 @@ export class ContainerComponent implements OnInit {
     }
   }
 
-  openDialog() {
+  openNewItemDialog() {
     const dialogRef = this.dialog.open(NewItemComponent, {
       width: '250px',
       data: {title: '', description: ''}
@@ -55,10 +55,28 @@ export class ContainerComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(async result => {
       if(result) {
-        await this.todoService.save({...result, createdDate: new Date('19-02-2021')});
+        await this.todoService.save({...result});
         this.items = await this.todoService.get();
       }
     });
+  }
+
+  openEditItemDialog(todoItem: TodoItem) {
+    const dialogRef = this.dialog.open(NewItemComponent, {
+      width: '250px',
+      data: todoItem
+    });
+
+    dialogRef.afterClosed().subscribe(async result => {
+      if(result) {
+        await this.todoService.edit({id:todoItem.id, ...result});
+        this.items = await this.todoService.get();
+      }
+    });
+  }
+
+  handleEditItemEvent(todoItem: TodoItem): void {
+    this.openEditItemDialog({...todoItem});
   }
 
 }

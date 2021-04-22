@@ -3,7 +3,7 @@
         <mat-icon>menu</mat-icon>
     </button>
     <span>Todos App</span>
-    <button mat-icon-button aria-label="Example icon button with a add icon"  (click)="openDialog()">
+    <button mat-icon-button aria-label="Example icon button with a add icon"  (click)="openNewItemDialog()">
         <mat-icon>add</mat-icon>
     </button>
     <button mat-icon-button aria-label="Example icon button with a cloud_upload icon"  (click)="openFileUpload()">
@@ -18,4 +18,4 @@
         <mat-icon>exit_to_app</mat-icon>
     </button>
 </mat-toolbar>
-<todo-item-summary [items]="items"></todo-item-summary>
+<todo-item-summary [items]="items" (editItem)="handleEditItemEvent($event)"></todo-item-summary>

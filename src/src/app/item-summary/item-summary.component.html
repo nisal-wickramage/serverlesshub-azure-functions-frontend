@@ -2,10 +2,10 @@
     <mat-list-item *ngFor="let item of items">
       <div mat-line>{{item.title}}</div>
       <div mat-line> {{item.description}} </div>
-      <button mat-icon-button color="warn" aria-label="Example icon button with a delete icon">
+      <button mat-icon-button color="warn" aria-label="Example icon button with a delete icon" (click)="delete(item.id)">
         <mat-icon>delete</mat-icon>
       </button>
-      <button mat-icon-button color="primary" aria-label="Example icon button with a edit icon">
+      <button mat-icon-button color="primary" aria-label="Example icon button with a edit icon" (click)="edit(item.id)">
         <mat-icon>edit</mat-icon>
       </button>
     </mat-list-item>

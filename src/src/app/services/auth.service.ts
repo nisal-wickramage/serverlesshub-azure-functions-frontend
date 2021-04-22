@@ -92,7 +92,7 @@ export class AuthService {
 
     headers.append("Authorization", bearer);
 
-    const options = {
+    const options = { //this is a sample
       method: "GET",
       headers: headers
     };

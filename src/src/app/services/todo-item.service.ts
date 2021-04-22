@@ -7,25 +7,53 @@ import { TodoItem } from './todo-item';
 })
 export class TodoItemService {
 
+  private apiBaseUrl = "https://serverlesshub-test-function-app.azurewebsites.net/api"
+
   private items: TodoItem[];
 
   constructor() { 
-    this.items = [
-      {title: 'Buy Grocery',description: 'Buy Grocery', createdDate: new Date('19-02-2021')},
-      {title: 'Laundry',description: 'Do Laundry', createdDate: new Date('19-02-2021')}
-    ];
+    this.items = [];
   }
 
   async save(item: NewTodoItem): Promise<void> {
-    this.items.push({...item, createdDate: new Date('19-02-2021')});
+    const headers = new Headers();
+    // const bearer = `Bearer ${token}`;
+    // headers.append("Authorization", bearer);
+
+    const options = {
+      method: "POST",
+      headers: headers,
+      body: JSON.stringify(item)
+    };
+
+    const url = `${this.apiBaseUrl}/CreateTodoItem`;
+
+    const response = await fetch(url, options);
+    await response.json();
+  }
+
+  async edit(item: TodoItem): Promise<void> {
+    const headers = new Headers();
+    // const bearer = `Bearer ${token}`;
+    // headers.append("Authorization", bearer);
+
+    const options = {
+      method: "POST",
+      headers: headers,
+      body: JSON.stringify(item)
+    };
+
+    const url = `${this.apiBaseUrl}/EditTodoItem/${item.id}`;
+
+    await fetch(url, options);
   }
 
   async saveAll(items: NewTodoItem[]): Promise<void> {
     const todoItems = items.map(item => {
       return {
+        id: 'dummy',
         title: item.title,
-        description: item.description,
-        createdDate: new Date('19-02-2021')
+        description: item.description
       } as TodoItem;
     });
 
@@ -34,12 +62,39 @@ export class TodoItemService {
     });
   }
 
-  async delete(uid: string): Promise<void> {
-    this.items = this.items.filter(item => item.uid !== uid);
+  async delete(id: string): Promise<void> {
+
+    const headers = new Headers();
+    // const bearer = `Bearer ${token}`;
+    // headers.append("Authorization", bearer);
+
+    const options = {
+      method: "DELETE",
+      headers: headers
+    };
+
+    const url = `${this.apiBaseUrl}/DeleteTodoItem/${id}`;
+
+    await fetch(url, options);
+    this.items = this.items.filter(item => item.id !== id);
   }
 
   async get(): Promise<TodoItem[]> {
-    return this.items;
+    const headers = new Headers();
+    // const bearer = `Bearer ${token}`;
+    // headers.append("Authorization", bearer);
+
+    const options = {
+      method: "GET",
+      headers: headers
+    };
+
+    const url = `${this.apiBaseUrl}/GetTodoItems`;
+
+    const response = await fetch(url, options);
+    const items = await response.json();
+    this.items = items;
+    return items;
   }
 
   async login(){
