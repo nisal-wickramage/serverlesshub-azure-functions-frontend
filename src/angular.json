@@ -50,7 +50,7 @@
             "assets": [
               "src/favicon.ico",
               "src/assets",
-              "src/config"
+              "src/app.config"
             ],
             "styles": [
               "./node_modules/@angular/material/prebuilt-themes/indigo-pink.css",

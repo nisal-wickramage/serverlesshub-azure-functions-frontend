@@ -21,7 +21,7 @@ export class ConfigService {
       headers: headers,
     };
 
-    const url = `config/app.config`;
+    const url = `app.config`;
 
     const response = await fetch(url, options);
     this.config = await response.json();
