@@ -17,6 +17,9 @@ import { ItemSummaryComponent } from './item-summary/item-summary.component';
 import { NewItemComponent } from './new-item/new-item.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
+import { APP_INITIALIZER } from '@angular/core';
+import { ConfigService }       from './services/config.service';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -37,7 +40,10 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     MatDialogModule,
     BrowserAnimationsModule
   ],
-  providers: [],
+  providers: [
+    ConfigService,
+        { provide: APP_INITIALIZER, useFactory: (config: ConfigService) => () => config.load(), deps: [ConfigService], multi: true }
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

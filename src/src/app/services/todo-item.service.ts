@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { ConfigService } from './config.service';
 import { NewTodoItem } from './new-todo-item';
 import { TodoItem } from './todo-item';
 
@@ -7,12 +8,13 @@ import { TodoItem } from './todo-item';
 })
 export class TodoItemService {
 
-  private apiBaseUrl = "https://serverlesshub-test-function-app.azurewebsites.net/api"
+  private apiBaseUrl: string
 
   private items: TodoItem[];
 
-  constructor() { 
+  constructor(private configService: ConfigService) { 
     this.items = [];
+    this.apiBaseUrl = configService.getApiBaseUrl();
   }
 
   async save(item: NewTodoItem): Promise<void> {
