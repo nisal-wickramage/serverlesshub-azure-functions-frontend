@@ -7,11 +7,6 @@ import { ConfigService } from './config.service';
   providedIn: 'root'
 })
 export class AuthService {
-
-  private readonly CLIENT_ID = 'a34afe18-b99a-44f3-b4b5-89dc0d41393c';
-  private readonly REDIRECT_URI = 'https://serverlesshubtestwebapp.z13.web.core.windows.net/';//'http://localhost:4200'; // 'https://serverlessapiprepweb.z13.web.core.windows.net';
-  private readonly SCOPES = ["https://serverlessapiprep.onmicrosoft.com/api/todo.crud"];
-
   private readonly msalInstance: msal.PublicClientApplication;
 
   private accountId: string | undefined;
@@ -25,9 +20,6 @@ export class AuthService {
       auth: {
         clientId: this.config.authClientId,
         authority: this.config.authAuthority,
-        //`https://serverlessapiprep.b2clogin.com/serverlessapiprep.onmicrosoft.com/B2C_1_serverlessapiprep`,
-        // `https://login.microsoftonline.com/2c8c1e59-3888-4b58-ba52-084bb3b9bcb9/`, //B2C_1_serverlessapiprep
-        // knownAuthorities: 'serverlessapiprep.b2clogin.com',,
         redirectUri: this.config.authRedirectUrl
       },
       cache: {
@@ -47,6 +39,7 @@ export class AuthService {
     } else if (currentAccounts.length > 1) {
       // Add your account choosing logic here
       console.log("Multiple accounts detected.");
+      this.accountId = currentAccounts[0].homeAccountId;
     } else if (currentAccounts.length === 1) {
       this.accountId = currentAccounts[0].homeAccountId;
       this.isLoggedIn = true;
