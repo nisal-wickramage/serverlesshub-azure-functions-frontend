@@ -1,16 +1,23 @@
 import { Injectable } from '@angular/core';
+import { AuthService } from './auth.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ConfigService {
 
-  private config: Config = { apiUrl:''};
+  private config: Config = { 
+    apiUrl:'',
+    authClientId: '',
+    authAuthority: '',
+    authRedirectUrl: '',
+    authScopes: []
+  };
 
   constructor() { }
 
-  getApiBaseUrl(): string {
-    return this.config.apiUrl;
+  get settings(): Config {
+    return this.config;
   }
 
   async load() {
@@ -30,4 +37,8 @@ export class ConfigService {
 
 export interface Config {
   apiUrl: string;
+  authClientId: string;
+  authAuthority: string;
+  authRedirectUrl: string;
+  authScopes: string[];
 }

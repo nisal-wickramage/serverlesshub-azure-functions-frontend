@@ -1,36 +1,34 @@
 import { Injectable } from '@angular/core';
 import * as msal from "@azure/msal-browser";
+import { Config } from 'protractor';
+import { ConfigService } from './config.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
 
-  private readonly CLIENT_ID = '37c46fbc-7c3a-47cc-87ee-d57cafb873b7';
-  private readonly REDIRECT_URI = 'http://localhost:4200'; // 'https://serverlessapiprepweb.z13.web.core.windows.net';
-  private readonly SCOPES = ["https://serverlessapiprep.onmicrosoft.com/spaapp/api.read"];
+  private readonly CLIENT_ID = 'a34afe18-b99a-44f3-b4b5-89dc0d41393c';
+  private readonly REDIRECT_URI = 'https://serverlesshubtestwebapp.z13.web.core.windows.net/';//'http://localhost:4200'; // 'https://serverlessapiprepweb.z13.web.core.windows.net';
+  private readonly SCOPES = ["https://serverlessapiprep.onmicrosoft.com/api/todo.crud"];
 
   private readonly msalInstance: msal.PublicClientApplication;
 
   private accountId: string | undefined;
-  private username: string | undefined;
+  private isLoggedIn = false;
 
-  private loginRequest = {
-    scopes: ["openid", ...this.SCOPES],
-  };
+  private config: Config;
 
-
-  private apiConfig = {
-    webApi: "https://serverlessapiprep.azurewebsites.net/api/helloworld?name=nisal"
-  };
-
-  constructor() {
+  constructor(private configService: ConfigService) {
+    this.config = this.configService.settings;
     const msalConfig = {
       auth: {
-        clientId: this.CLIENT_ID,
-        authority: `https://serverlessapiprep.b2clogin.com/serverlessapiprep.onmicrosoft.com/B2C_1_serverlessapiprep`,
-        // knownAuthorities: 'serverlessapiprep.b2clogin.com',
-        redirectUri: this.REDIRECT_URI
+        clientId: this.config.authClientId,
+        authority: this.config.authAuthority,
+        //`https://serverlessapiprep.b2clogin.com/serverlessapiprep.onmicrosoft.com/B2C_1_serverlessapiprep`,
+        // `https://login.microsoftonline.com/2c8c1e59-3888-4b58-ba52-084bb3b9bcb9/`, //B2C_1_serverlessapiprep
+        // knownAuthorities: 'serverlessapiprep.b2clogin.com',,
+        redirectUri: this.config.authRedirectUrl
       },
       cache: {
         cacheLocation: "localStorage",
@@ -51,22 +49,20 @@ export class AuthService {
       console.log("Multiple accounts detected.");
     } else if (currentAccounts.length === 1) {
       this.accountId = currentAccounts[0].homeAccountId;
-      this.username = currentAccounts[0].username;
-      this.welcomeUser(this.username);
+      this.isLoggedIn = true;
     }
-  }
-
-  private welcomeUser(username: string | undefined): void {
-    alert(`welcome ${username}`);
   }
 
   async signIn(): Promise<void> {
     try {
-      const loginResponse = await this.msalInstance.loginPopup(this.loginRequest);
+      const loginRequest = {
+        scopes: ["openid", ...this.config.authScopes],
+      };
+
+      const loginResponse = await this.msalInstance.loginPopup(loginRequest);
       if (loginResponse) {
         this.accountId = loginResponse.account?.homeAccountId;
-        this.username = loginResponse.account?.username;
-        this.welcomeUser(this.username);
+        this.isLoggedIn = true;
       } else {
         this.selectAccount()
       }
@@ -75,36 +71,24 @@ export class AuthService {
     }
   }
 
-  async callApi(): Promise<void> {
+  async getBearerToken(): Promise<string> {
     const account = this.msalInstance.getAccountByHomeId(this.accountId ? this.accountId : '');
+    this.msalInstance.setActiveAccount(account);
     const tokenRequest = {
-      scopes: [...this.SCOPES],
+      scopes: [...this.config.authScopes],
       forceRefresh: false,
       account: account ? account : undefined
     };
     const tokenResponse = await this.msalInstance.acquireTokenSilent(tokenRequest);
-    await this.callApi2(tokenResponse.accessToken);
-  }
-
-  async callApi2(token: string): Promise<void> {
-    const headers = new Headers();
-    const bearer = `Bearer ${token}`;
-
-    headers.append("Authorization", bearer);
-
-    const options = { //this is a sample
-      method: "GET",
-      headers: headers
-    };
-
-    console.log('Calling Web API...');
-
-    const response = await fetch(this.apiConfig.webApi, options);
+    const bearer = `Bearer ${tokenResponse.accessToken}`;
+    return bearer;
   }
 
   async signOut(): Promise<void> {
-    console.log('Sign-out');
+    this.msalInstance.logout();
   }
 
-
+  get isAuthenticated() {
+    return this.isLoggedIn;
+  }
 }

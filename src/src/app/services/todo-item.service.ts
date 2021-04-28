@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { AuthService } from './auth.service';
 import { ConfigService } from './config.service';
 import { NewTodoItem } from './new-todo-item';
 import { TodoItem } from './todo-item';
@@ -12,15 +13,25 @@ export class TodoItemService {
 
   private items: TodoItem[];
 
-  constructor(private configService: ConfigService) { 
+  constructor(
+    private configService: ConfigService, 
+    private authService: AuthService) { 
     this.items = [];
-    this.apiBaseUrl = configService.getApiBaseUrl();
+    this.apiBaseUrl = this.configService.settings.apiUrl;
+  }
+
+  private async getBearerToken(): Promise<string> {
+    if(this.authService.isAuthenticated) {
+      const accessToken = await this.authService.getBearerToken();
+      return accessToken;
+    }
+    throw new Error('User is not authenticated.')
   }
 
   async save(item: NewTodoItem): Promise<void> {
     const headers = new Headers();
-    // const bearer = `Bearer ${token}`;
-    // headers.append("Authorization", bearer);
+    const bearerToken = await this.getBearerToken()
+    headers.append("Authorization",bearerToken);
 
     const options = {
       method: "POST",
@@ -36,8 +47,8 @@ export class TodoItemService {
 
   async edit(item: TodoItem): Promise<void> {
     const headers = new Headers();
-    // const bearer = `Bearer ${token}`;
-    // headers.append("Authorization", bearer);
+    const bearerToken = await this.getBearerToken()
+    headers.append("Authorization",bearerToken);
 
     const options = {
       method: "POST",
@@ -67,8 +78,8 @@ export class TodoItemService {
   async delete(id: string): Promise<void> {
 
     const headers = new Headers();
-    // const bearer = `Bearer ${token}`;
-    // headers.append("Authorization", bearer);
+    const bearerToken = await this.getBearerToken()
+    headers.append("Authorization",bearerToken);
 
     const options = {
       method: "DELETE",
@@ -83,8 +94,8 @@ export class TodoItemService {
 
   async get(): Promise<TodoItem[]> {
     const headers = new Headers();
-    // const bearer = `Bearer ${token}`;
-    // headers.append("Authorization", bearer);
+    const bearerToken = await this.getBearerToken()
+    headers.append("Authorization",bearerToken);
 
     const options = {
       method: "GET",
@@ -97,13 +108,5 @@ export class TodoItemService {
     const items = await response.json();
     this.items = items;
     return items;
-  }
-
-  async login(){
-    console.log('login');
-  }
-
-  async logout(){
-    console.log('logout');
   }
 }

@@ -24,15 +24,22 @@ export class ContainerComponent implements OnInit {
    }
 
   ngOnInit(): void {
-    this.todoService.get().then(items => {this.items = items;});
+    if(this.authService.isAuthenticated){
+      this.todoService.get().then(items => {this.items = items;});
+    } else {
+      this.authService.signIn().then(data => {
+        this.todoService.get().then(items => {this.items = items;});
+      });
+    }
   }
 
   async signIn(): Promise<void> {
+    console.log('start');
     await this.authService.signIn();
   }
 
   async callApi(): Promise<void> {
-    await this.authService.callApi();
+    
   }
 
   openFileUpload(): void {
