@@ -80,12 +80,14 @@ export class AuthService {
       account: account ? account : undefined
     };
     const tokenResponse = await this.msalInstance.acquireTokenSilent(tokenRequest);
+    this.isLoggedIn = true;
     const bearer = `Bearer ${tokenResponse.accessToken}`;
     return bearer;
   }
 
   async signOut(): Promise<void> {
-    this.msalInstance.logout();
+    await this.msalInstance.logout();
+    this.isLoggedIn = false;
   }
 
   get isAuthenticated() {

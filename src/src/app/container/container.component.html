@@ -11,10 +11,10 @@
     </button>
     <input #todoupload type="file" id="todoupload" accept=".csv" style="display:none" (change)="onFileSelected($event)">
     <span class="example-spacer"></span>
-    <button mat-icon-button aria-label="Example icon button with a perm_identity icon" (click)="signIn()">
+    <button *ngIf="isAuthenticated" mat-icon-button aria-label="Example icon button with a perm_identity icon" (click)="signIn()">
         <mat-icon>perm_identity</mat-icon>
     </button>
-    <button mat-icon-button aria-label="Example icon button with a exit_to_app icon" (click)="callApi()">
+    <button *ngIf="!isAuthenticated" mat-icon-button aria-label="Example icon button with a exit_to_app icon" (click)="signOut()">
         <mat-icon>exit_to_app</mat-icon>
     </button>
 </mat-toolbar>

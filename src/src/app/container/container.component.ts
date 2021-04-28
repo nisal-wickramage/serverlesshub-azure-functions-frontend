@@ -33,13 +33,17 @@ export class ContainerComponent implements OnInit {
     }
   }
 
+  get isAuthenticated(): boolean {
+    console.log(this.authService.isAuthenticated); // check why icons not working correct
+    return this.authService.isAuthenticated;
+  }
+
   async signIn(): Promise<void> {
-    console.log('start');
     await this.authService.signIn();
   }
 
-  async callApi(): Promise<void> {
-    
+  async signOut(): Promise<void> {
+    await this.authService.signOut();
   }
 
   openFileUpload(): void {
