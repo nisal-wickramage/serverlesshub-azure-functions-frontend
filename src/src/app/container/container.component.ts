@@ -53,6 +53,7 @@ export class ContainerComponent implements OnInit {
   onFileSelected(event: any): void {
     if(event.target.files && event.target.files.length === 1 && event.target.files[0].size < 1024*1024 ) {
       console.log(event.target.files[0].size);
+      this.todoService.saveAll(event.target.files[0]);
     } else {
       alert("Please make sure you are only upload a single file and file size is less than 1 MB.");
     }

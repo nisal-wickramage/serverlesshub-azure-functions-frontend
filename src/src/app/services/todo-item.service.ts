@@ -61,18 +61,22 @@ export class TodoItemService {
     await fetch(url, options);
   }
 
-  async saveAll(items: NewTodoItem[]): Promise<void> {
-    const todoItems = items.map(item => {
-      return {
-        id: 'dummy',
-        title: item.title,
-        description: item.description
-      } as TodoItem;
-    });
+  async saveAll(file: any): Promise<void> {
+    const headers = new Headers();
+    const bearerToken = await this.getBearerToken()
+    headers.append("Authorization", bearerToken);
+    const formData = new FormData()
+    formData.append('myFile', file);
 
-    todoItems.forEach(item => {
-      this.items.push(item);
-    });
+    const options = {
+      method: "POST",
+      headers: headers,
+      body: formData
+    };
+
+    const url = `${this.apiBaseUrl}/ImportTodoItems`;
+
+    await fetch(url, options);
   }
 
   async delete(id: string): Promise<void> {
