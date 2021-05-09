@@ -39,7 +39,7 @@ export class TodoItemService {
       body: JSON.stringify(item)
     };
 
-    const url = `${this.apiBaseUrl}/CreateTodoItem`;
+    const url = `${this.apiBaseUrl}/todoitem`;
 
     const response = await fetch(url, options);
     await response.json();
@@ -56,7 +56,7 @@ export class TodoItemService {
       body: JSON.stringify(item)
     };
 
-    const url = `${this.apiBaseUrl}/EditTodoItem/${item.id}`;
+    const url = `${this.apiBaseUrl}/todoitem/${item.id}`;
 
     await fetch(url, options);
   }
@@ -74,7 +74,7 @@ export class TodoItemService {
       body: formData
     };
 
-    const url = `${this.apiBaseUrl}/ImportTodoItems`;
+    const url = `${this.apiBaseUrl}/uploadtodoitems`;
 
     await fetch(url, options);
   }
@@ -90,7 +90,7 @@ export class TodoItemService {
       headers: headers
     };
 
-    const url = `${this.apiBaseUrl}/DeleteTodoItem/${id}`;
+    const url = `${this.apiBaseUrl}/todoitem/${id}`;
 
     await fetch(url, options);
     this.items = this.items.filter(item => item.id !== id);
@@ -106,7 +106,7 @@ export class TodoItemService {
       headers: headers
     };
 
-    const url = `${this.apiBaseUrl}/GetTodoItems`;
+    const url = `${this.apiBaseUrl}/todoitem`;
 
     const response = await fetch(url, options);
     const items = await response.json();
