@@ -7,4 +7,4 @@ https://youtu.be/rt7KxBqWdPw
 
 ## 07 Authentication & Authorization | Building Web API’s with Azure Functions
 This video shows how to setup authentication with azure ad b2c
-https://youtu.be/kUqiVis_c0s
+https://youtu.be/Qt2ZEoqQj3Y
